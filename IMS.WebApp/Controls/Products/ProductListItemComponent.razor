@@ -1,0 +1,39 @@
+﻿@using IMS.CoreBusiness
+@inject NavigationManager NavigationManager
+
+@foreach (var prod in Products)
+{
+    <tr>
+        <td>@prod.ProductName</td>
+        <td>@prod.Quantity</td>
+        <td>@prod.Price.ToString("c")</td>
+        <td>
+            <button type="button" class="btn btn-dark" onclick="@(()=> EditProduct(prod.ProductID))">Edit</button>
+        </td>
+        
+        @* <td>
+            @if (!string.IsNullOrWhiteSpace(prod.ProdImgUrl))
+            {
+                <div class="card" style="width: 100px;">
+                    <img src="@prod.ProdImgUrl" class="card-img-top" alt="Product Image">
+                </div>
+            }
+            else
+            {
+                <div>No Image Available</div>
+            }
+        </td> *@
+
+    </tr>
+}
+
+
+@code {
+    [Parameter]
+    public List<Product> Products { get; set; } = new List<Product>();
+
+    private void EditProduct(int productId)
+    {
+        NavigationManager.NavigateTo($"/editproduct/{productId}");
+    }
+}

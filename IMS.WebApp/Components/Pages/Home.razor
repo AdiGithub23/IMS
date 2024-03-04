@@ -1,0 +1,25 @@
+﻿@page "/"
+@using IMS.UseCases.Products.interfaces
+
+@inject IViewProductsByNameUseCase ViewProductsByNameUseCase
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+Welcome to your new app.
+
+<ul>
+    @foreach (var prd in _products)
+    {
+        <li>@prd.ProductName</li>
+    }
+</ul>
+
+@code {
+    private List<Product> _products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {        
+        _products = (await ViewProductsByNameUseCase.ExecuteAsync("")).ToList();
+    }
+}

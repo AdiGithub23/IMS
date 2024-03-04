@@ -1,0 +1,76 @@
+﻿@page "/editproduct/{ProdId:int}"
+@using IMS.UseCases.Products
+@using IMS.UseCases.Products.interfaces
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IEditProductUseCase EditProductUseCase
+@inject IViewProductByIdUseCase ViewProductByIdUseCase  
+
+<h3>Edit Product</h3> <br/>
+
+@if (this.product != null)
+{
+    <EditForm Model="product" OnValidSubmit="SaveProduct">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <InputText id="name" class="form-control" @bind-Value="product.ProductName" />
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <InputNumber id="name" class="form-control" @bind-Value="product.Quantity" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <InputNumber id="name" class="form-control" @bind-Value="product.Price" />
+        </div>
+
+        <br />
+
+        <button type="submit" class="btn btn-outline-primary">Save</button>
+        <button type="button" class="btn btn-outline-primary" @onclick="Cancel">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int ProdId { get; set; }
+
+    private Product? product = new Product();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        this.product = await ViewProductByIdUseCase.ExecuteAsync(this.ProdId);
+    }
+
+    private async Task SaveProduct()
+    {
+        if (this.product != null)
+        {
+            await EditProductUseCase.ExecuteAsync(this.product);
+        }
+        NavigationManager.NavigateTo("/products");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/products");
+    }
+
+    // private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    // {
+    //     var file = e.File;
+    //     if (file != null)
+    //     {
+    //         var buffer = new byte[file.Size];
+    //         await file.OpenReadStream().ReadAsync(buffer);
+    //         product.ProdImgUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+    //     }
+    // }
+}

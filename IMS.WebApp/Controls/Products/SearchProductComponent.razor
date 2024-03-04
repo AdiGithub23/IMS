@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+
+
+@* Search Box Component *@
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="Search Product Name"
+           @bind-value="@productNameToSearch" @bind-value:event="oninput" />
+    <button type="button" class="btn-success input-group-text" @onclick="OnSearch">Search</button>
+</div>
+
+@productNameToSearch
+<br />
+
+@code {
+    private string productNameToSearch = string.Empty;
+
+    [Parameter] // Explain with ChatGPT
+    public EventCallback<string> OnSearchProduct { get; set; }
+
+    private void OnSearch() // Event Handler
+    {
+        OnSearchProduct.InvokeAsync(productNameToSearch);
+    }
+
+}
